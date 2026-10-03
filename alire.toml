@@ -23,7 +23,7 @@ fabula = "*"
 #  tempus itself pins sml the same way; that link rides along, so this
 #  crate never pins sml directly.
 [[pins]]
-tempus = { url = "https://github.com/ldm5180/tempus.git", commit = "51712384be2cc5694d436e11f31024bdf41849ae" }
+tempus = { url = "https://github.com/ldm5180/tempus.git", commit = "7659f7f062782a940346b2b988f8bd51e258f1e3" }
 #  fabula, the Gherkin runner the features under tests/features/ run on,
 #  is a TEST dependency and not in the community index either.  Pinned by
 #  commit like tempus, and its own sml pin must equal the one tempus

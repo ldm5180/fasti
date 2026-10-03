@@ -18,7 +18,7 @@ with "sml";
 project Proof is
 
    for Source_Dirs use
-     ("src", "../src", "../alire/cache/pins/tempus_51712384/src");
+     ("src", "../src", "../alire/cache/pins/tempus_7659f7f0/src");
    for Object_Dir use "obj";
 
    package Compiler is
