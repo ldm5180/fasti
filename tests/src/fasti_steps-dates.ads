@@ -41,4 +41,7 @@ package Fasti_Steps.Dates is
    function Ms_Of (Word : String) return Fasti.Day_Milliseconds
    with Pre => Time_Reads (Word);
 
+   --  Ms as a feature writes a time of day, HH:MM:SS.mmm.
+   function Clock_Spelled (Ms : Fasti.Day_Milliseconds) return String;
+
 end Fasti_Steps.Dates;

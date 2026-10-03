@@ -89,6 +89,13 @@ package body Fasti_Steps_Dates_Tests is
       Assert (not Time_Reads ("12:00:00"), "a time without ms does not read");
       Assert (not Time_Reads ("12-00-00.000"), "dashes do not read");
       Assert (not Time_Reads ("12:00:00.00x"), "a letter does not read");
+      Assert
+        (Clock_Spelled (58_991_998) = "16:23:11.998",
+         "a time of day spells as it reads");
+      Assert (Clock_Spelled (0) = "00:00:00.000", "midnight keeps its zeros");
+      Assert
+        (Ms_Of (Clock_Spelled (86_399_999)) = 86_399_999,
+         "spelling then reading is the time again");
    end Test_Clock_Words;
 
    overriding

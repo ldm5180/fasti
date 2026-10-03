@@ -118,4 +118,17 @@ package body Fasti_Steps.Dates is
        * Ms_A_Second
        + Millis (Word));
 
+   Milli_Digits : constant := 3;
+   Ms_A_Minute  : constant := Sixty * Ms_A_Second;
+   Ms_An_Hour   : constant := Sixty * Ms_A_Minute;
+
+   function Clock_Spelled (Ms : Fasti.Day_Milliseconds) return String
+   is (Padded (Ms / Ms_An_Hour, Pair)
+       & ":"
+       & Padded (Ms / Ms_A_Minute mod Sixty, Pair)
+       & ":"
+       & Padded (Ms / Ms_A_Second mod Sixty, Pair)
+       & "."
+       & Padded (Ms mod Ms_A_Second, Milli_Digits));
+
 end Fasti_Steps.Dates;
