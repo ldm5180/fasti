@@ -1,6 +1,6 @@
 # Feature tests plan
 
-Status: in progress on branch `feature-tests`: F0-F2 done; F3-F10 to do.
+Status: in progress on branch `feature-tests`: F0-F3 done; F4-F10 to do.
 
 The calendar's behavior, stated in Gherkin and run against the proven
 functions with nothing to fake.  `*.feature` files under
@@ -775,3 +775,14 @@ commit, so the unit layer stays complete.
   tests are a pair of their own, `Fasti_Steps_Dates_Tests`, beside
   `Fasti_Tests` rather than inside it, one pair per unit.  The `World`
   grows a field with the feature that first reads it, not all at once.
+- **During F3 (2026-10-03):** the feature opens with a description
+  of the rules, which the living documentation shows above the
+  scenarios; the first outline also says `it is not a market holiday`,
+  and the Saturday and Sunday observance scenarios also say `the
+  market is closed`.  The planned mutation (2026-07-03 to 2026-07-06)
+  now fails at `it is a Friday` with `it is a Monday`, the step before
+  the holiday check.  A library mutation -- a Saturday holiday
+  observed on the Monday after, the predecessor's bug -- fails three
+  scenarios.  The dates were checked against the fixture CSV and
+  Python's calendar; `date -d` on this box reads a dashed date a day
+  early, so it was not used.

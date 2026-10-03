@@ -17,7 +17,9 @@ package body Fasti_Steps.Trading is
       A_Check_Weekday,
       A_Refuse_Day_Name,
       A_Check_Trades,
-      A_Check_Closed);
+      A_Check_Closed,
+      A_Check_Holiday,
+      A_Check_No_Holiday);
 
    First_Capture : constant := 1;
 
@@ -48,32 +50,44 @@ package body Fasti_Steps.Trading is
       pragma Unreferenced (Evt);
    begin
       case A is
-         when A_Nothing         =>
+         when A_Nothing          =>
             null;
 
-         when A_Keep_Day        =>
+         when A_Keep_Day         =>
             Ctx.W.Day := Dates.Packed (Word (Ctx));
 
-         when A_Refuse_Day      =>
+         when A_Refuse_Day       =>
             Fabula.Check.Fail_Step
               (Ctx.R, "not a calendar date: " & Word (Ctx));
 
-         when A_Check_Weekday   =>
+         when A_Check_Weekday    =>
             Expect_Day (Ctx);
 
-         when A_Refuse_Day_Name =>
+         when A_Refuse_Day_Name  =>
             Fabula.Check.Fail_Step
               (Ctx.R, "not a day of the week: " & Word (Ctx));
 
-         when A_Check_Trades    =>
+         when A_Check_Trades     =>
             Fabula.Check.Is_True
               (Ctx.R,
                Fasti.Is_Trading_Day (Ctx.W.Day),
                "the market is closed");
 
-         when A_Check_Closed    =>
+         when A_Check_Closed     =>
             Fabula.Check.Is_False
               (Ctx.R, Fasti.Is_Trading_Day (Ctx.W.Day), "the market trades");
+
+         when A_Check_Holiday    =>
+            Fabula.Check.Is_True
+              (Ctx.R,
+               Fasti.Is_Market_Holiday (Ctx.W.Day),
+               "it is no market holiday");
+
+         when A_Check_No_Holiday =>
+            Fabula.Check.Is_False
+              (Ctx.R,
+               Fasti.Is_Market_Holiday (Ctx.W.Day),
+               "it is a market holiday");
       end case;
    end Execute;
 
@@ -90,21 +104,25 @@ package body Fasti_Steps.Trading is
    use Flow.Machines;
    use Flow.Op;
 
-   Day_Given     : constant Ev := (Kind => E_Day_Given);
-   Check_Weekday : constant Ev := (Kind => E_Check_Weekday);
-   Check_Trades  : constant Ev := (Kind => E_Check_Trades);
-   Check_Closed  : constant Ev := (Kind => E_Check_Closed);
+   Day_Given        : constant Ev := (Kind => E_Day_Given);
+   Check_Weekday    : constant Ev := (Kind => E_Check_Weekday);
+   Check_Trades     : constant Ev := (Kind => E_Check_Trades);
+   Check_Closed     : constant Ev := (Kind => E_Check_Closed);
+   Check_Holiday    : constant Ev := (Kind => E_Check_Holiday);
+   Check_No_Holiday : constant Ev := (Kind => E_Check_No_Holiday);
 
    --!format off
    Table : constant Transition_Table :=
-     [Undated + Day_Given     (Date_Reads)     / A_Keep_Day        >= Dated,
-      Undated + Day_Given                      / A_Refuse_Day      >= Undated,
-      Dated   + Day_Given     (Date_Reads)     / A_Keep_Day        >= Dated,
-      Dated   + Day_Given                      / A_Refuse_Day      >= Undated,
-      Dated   + Check_Weekday (Day_Name_Reads) / A_Check_Weekday   >= Dated,
-      Dated   + Check_Weekday                  / A_Refuse_Day_Name >= Dated,
-      Dated   + Check_Trades                   / A_Check_Trades    >= Dated,
-      Dated   + Check_Closed                   / A_Check_Closed    >= Dated];
+     [Undated + Day_Given        (Date_Reads)     / A_Keep_Day         >= Dated,
+      Undated + Day_Given                         / A_Refuse_Day       >= Undated,
+      Dated   + Day_Given        (Date_Reads)     / A_Keep_Day         >= Dated,
+      Dated   + Day_Given                         / A_Refuse_Day       >= Undated,
+      Dated   + Check_Weekday    (Day_Name_Reads) / A_Check_Weekday    >= Dated,
+      Dated   + Check_Weekday                     / A_Refuse_Day_Name  >= Dated,
+      Dated   + Check_Trades                      / A_Check_Trades     >= Dated,
+      Dated   + Check_Closed                      / A_Check_Closed     >= Dated,
+      Dated   + Check_Holiday                     / A_Check_Holiday    >= Dated,
+      Dated   + Check_No_Holiday                  / A_Check_No_Holiday >= Dated];
    --!format on
 
    Current : State := Undated;
