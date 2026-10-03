@@ -1,6 +1,6 @@
 # Feature tests plan
 
-Status: in progress on branch `feature-tests`: F0-F8 done; F9-F10 to do.
+Status: in progress on branch `feature-tests`: F0-F9 done; F10 to do.
 
 The calendar's behavior, stated in Gherkin and run against the proven
 functions with nothing to fake.  `*.feature` files under
@@ -827,3 +827,9 @@ commit, so the unit layer stays complete.
   green codes where it carried none; piped, none, with the summary
   still checked; a broken expectation prints red and fails the target
   (`features: debug: the runner failed`, exit 2).
+- **During F9 (2026-10-03):** `tools/features-report/` is nuntius's
+  with the names changed (the lockfile's two `name` fields included).
+  Locally the page lists five features and 43 scenarios; a broken row
+  still writes `index.html` and the target exits 2.  The CI steps are
+  nuntius's, after `make run`; the `alr test` step's comment now says
+  it runs the features too.
