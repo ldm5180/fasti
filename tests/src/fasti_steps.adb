@@ -6,6 +6,7 @@ with Fabula.Numbers;
 with Fasti_Steps.Eastern;
 with Fasti_Steps.Expirations;
 with Fasti_Steps.Trading;
+with Fasti_Steps.Weekdays;
 
 package body Fasti_Steps is
 
@@ -61,12 +62,14 @@ package body Fasti_Steps is
    Trading_Name     : aliased constant String := "trading days";
    Expirations_Name : aliased constant String := "expirations";
    Eastern_Name     : aliased constant String := "eastern";
+   Weekdays_Name    : aliased constant String := "weekdays";
 
    --!format off
    Regions : constant array (Positive range <>) of Region :=
      [(Trading_Name'Access,     Trading.Offer'Access,     Trading.Reset'Access,     Trading.Phase'Access),
       (Expirations_Name'Access, Expirations.Offer'Access, Expirations.Reset'Access, Expirations.Phase'Access),
-      (Eastern_Name'Access,     Eastern.Offer'Access,     Eastern.Reset'Access,     Eastern.Phase'Access)];
+      (Eastern_Name'Access,     Eastern.Offer'Access,     Eastern.Reset'Access,     Eastern.Phase'Access),
+      (Weekdays_Name'Access,    Weekdays.Offer'Access,    Weekdays.Reset'Access,    Weekdays.Phase'Access)];
    --!format on
 
    --  Every region's state, for the step no region would take.

@@ -1,6 +1,6 @@
 # Feature tests plan
 
-Status: in progress on branch `feature-tests`: F0-F5 done; F6-F10 to do.
+Status: in progress on branch `feature-tests`: F0-F6 done; F7-F10 to do.
 
 The calendar's behavior, stated in Gherkin and run against the proven
 functions with nothing to fake.  `*.feature` files under
@@ -807,3 +807,10 @@ commit, so the unit layer stays complete.
   March) failed the feature and not the unit suite, so
   `Test_To_Eastern` gained the same pair, as section 7 allowed -- in
   its own commit, and shown failing under the same mutation.
+- **During F6 (2026-10-03):** the mask's region reads the date the
+  trading region keeps in the world, so `entry is {word}` has a third
+  guard, the date not yet named, refused as `name the date before the
+  entry`.  The feature's description says how a mask's digits read
+  (Sunday is 0): the digits are the operator's own knob, so the
+  numbering is the knob's, not an internal.  A library mutation (the
+  mask read to its last digit only) fails the 2345-on-a-Thursday row.
