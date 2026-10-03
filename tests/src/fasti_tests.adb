@@ -150,6 +150,18 @@ package body Fasti_Tests is
         (Ok and then D = 20_251_231 and then Ms = 68_400_000,
          "a UTC midnight lands the PREVIOUS Eastern day (19:00)");
 
+      --  The same UTC hour either side of the 2nd Sunday of March 2026
+      --  (March 8): EST on the Saturday, EDT on the Monday.
+      To_Eastern (1_772_877_600_000, D, Ms, Ok);
+      Assert
+        (Ok and then D = 20_260_307 and then Ms = 18_000_000,
+         "the Saturday before DST (EST -5): 2026-03-07 05:00");
+
+      To_Eastern (1_773_050_400_000, D, Ms, Ok);
+      Assert
+        (Ok and then D = 20_260_309 and then Ms = 21_600_000,
+         "the Monday after DST begins (EDT -4): 2026-03-09 06:00");
+
       To_Eastern (-5, D, Ms, Ok);
       Assert (not Ok, "pre-epoch instants are refused");
    end Test_To_Eastern;
