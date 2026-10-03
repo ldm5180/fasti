@@ -23,7 +23,10 @@ package Fasti_Steps is
       E_Fetch,
       E_Check_Count,
       E_Check_List,
-      E_Check_Prior);
+      E_Check_Prior,
+      E_Instant_Given,
+      E_Check_Eastern,
+      E_Check_No_Eastern);
 
    type Hook_Kind is (Fresh_World);
 
@@ -33,11 +36,20 @@ package Fasti_Steps is
       Count : Fasti.Expiration_Count := 0;
    end record;
 
-   --  What one scenario reads back: the date the steps are about, and
-   --  what a chain fetch found.
+   --  An instant read on the Eastern wall clock: its day and time of
+   --  day, or Ok False when it has none.
+   type Eastern_Reading is record
+      Day : Fasti.Day := 0;
+      Ms  : Fasti.Day_Milliseconds := 0;
+      Ok  : Boolean := False;
+   end record;
+
+   --  What one scenario reads back: the date the steps are about, what
+   --  a chain fetch found, and an instant on the Eastern clock.
    type World is record
-      Day   : Fasti.Day := 0;
-      Fetch : Fetch_Reading;
+      Day     : Fasti.Day := 0;
+      Fetch   : Fetch_Reading;
+      Eastern : Eastern_Reading;
    end record;
 
    --  One step as a machine sees it: the scenario, the step's arguments,
@@ -88,7 +100,12 @@ package Fasti_Steps is
       Step ("it finds {int}")             >= E_Check_Count,
       Step ("the expirations are:")       >= E_Check_List,
       Step ("the prior trading day of {word} is {word}")
-                                          >= E_Check_Prior];
+                                          >= E_Check_Prior,
+      Step ("the instant {int} ms after the epoch")
+                                          >= E_Instant_Given,
+      Step ("in Eastern time it is {word} at {word}")
+                                          >= E_Check_Eastern,
+      Step ("it has no Eastern day")      >= E_Check_No_Eastern];
    --!format on
 
    Hook_Defs : constant Steps.Hook_Table := [Before >= Fresh_World];

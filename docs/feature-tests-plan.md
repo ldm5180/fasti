@@ -1,6 +1,6 @@
 # Feature tests plan
 
-Status: in progress on branch `feature-tests`: F0-F4 done; F5-F10 to do.
+Status: in progress on branch `feature-tests`: F0-F5 done; F6-F10 to do.
 
 The calendar's behavior, stated in Gherkin and run against the proven
 functions with nothing to fake.  `*.feature` files under
@@ -796,3 +796,14 @@ commit, so the unit layer stays complete.
   parsers.  The capture readers every machine shares moved out of the
   machines: `Word` and the count readers into the registry,
   `Date_Read` / `Date` / `Refuse_Date` into `Fasti_Steps.Dates`.
+- **During F5 (2026-10-03):** the refusal step is `it has no Eastern
+  day`, the behavior (`Ok` False), rather than `it is before the
+  epoch`, which a past-the-window instant would also have passed; so
+  the refusal is one outline over both edges (-5 ms, and 2200-01-01
+  12:00 UTC), taking the first of section 6's second-wave bullets.
+  The DST pair's epochs came from Python's zoneinfo (1772877600000,
+  1773050400000), the source the unit suite's three instants were
+  pinned against.  A library mutation (DST from the first Sunday of
+  March) failed the feature and not the unit suite, so
+  `Test_To_Eastern` gained the same pair, as section 7 allowed -- in
+  its own commit, and shown failing under the same mutation.
