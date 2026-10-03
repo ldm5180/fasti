@@ -1,6 +1,6 @@
 # Feature tests plan
 
-Status: in progress on branch `feature-tests`: F0-F1 done; F2-F10 to do.
+Status: in progress on branch `feature-tests`: F0-F2 done; F3-F10 to do.
 
 The calendar's behavior, stated in Gherkin and run against the proven
 functions with nothing to fake.  `*.feature` files under
@@ -767,3 +767,11 @@ commit, so the unit layer stays complete.
   scratch directory: a check before any date fails `E_CHECK_TRADES is
   not a step this scenario can take now: trading days=UNDATED`;
   `2026-13-40` and `20260702` fail `not a calendar date: <word>`.
+- **During F2 (2026-10-03):** the day-name half is `Name_Of
+  (Weekday_Number)` and `Is_Day_Name`, not `Day_Named`: the check
+  compares the date's own name with the word, so its failure says
+  which day it is (`it is a Thursday`).  Both shape checks are one
+  `Fits (Word, "dddd-dd-dd")` template match.  The parsers' unit
+  tests are a pair of their own, `Fasti_Steps_Dates_Tests`, beside
+  `Fasti_Tests` rather than inside it, one pair per unit.  The `World`
+  grows a field with the feature that first reads it, not all at once.

@@ -13,7 +13,8 @@ package Fasti_Steps is
 
    --  The steps, grouped by the feature that reads them.  Each is an
    --  event of that feature's state machine, in its own child package.
-   type Step_Kind is (E_Day_Given, E_Check_Trades, E_Check_Closed);
+   type Step_Kind is
+     (E_Day_Given, E_Check_Weekday, E_Check_Trades, E_Check_Closed);
 
    type Hook_Kind is (Fresh_World);
 
@@ -47,7 +48,8 @@ package Fasti_Steps is
    Step_Defs : constant Steps.Step_Table :=
      [Step ("the date is {word}")    >= E_Day_Given,
       Step ("it is a trading day")   >= E_Check_Trades,
-      Step ("the market is closed")  >= E_Check_Closed];
+      Step ("the market is closed")  >= E_Check_Closed,
+      Step ("it is a {word}")        >= E_Check_Weekday];
    --!format on
 
    Hook_Defs : constant Steps.Hook_Table := [Before >= Fresh_World];
