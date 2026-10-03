@@ -218,6 +218,9 @@ package body Fasti_Tests is
         (Days_Between (20_260_228, 20_260_301) = 1,
          "across a non-leap February");
       Assert
+        (Days_Between (20_280_228, 20_280_301) = 2,
+         "across a leap February: the 29th counts");
+      Assert
         (Days_Between (20_260_713, 20_260_710) = -3, "a past To is negative");
    end Test_Days_Between;
 
