@@ -41,6 +41,11 @@ package body Fasti_Steps_Dates_Tests is
       Assert (not Reads ("1969-12-31"), "the day before the window does not");
       Assert (Reads ("2199-12-31"), "the window's last day reads");
       Assert (not Reads ("2200-01-01"), "the day after the window does not");
+      Assert (Spelled (20_260_703) = "2026-07-03", "a day spells as it reads");
+      Assert (Spelled (19_700_101) = "1970-01-01", "zeros are kept");
+      Assert
+        (Packed (Spelled (21_991_231)) = 21_991_231,
+         "spelling then packing is the day again");
    end Test_Date_Words;
 
    --  The seven day names, as Fasti numbers them, and nothing else.

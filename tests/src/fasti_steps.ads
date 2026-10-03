@@ -19,13 +19,25 @@ package Fasti_Steps is
       E_Check_Trades,
       E_Check_Closed,
       E_Check_Holiday,
-      E_Check_No_Holiday);
+      E_Check_No_Holiday,
+      E_Fetch,
+      E_Check_Count,
+      E_Check_List,
+      E_Check_Prior);
 
    type Hook_Kind is (Fresh_World);
 
-   --  What one scenario reads back: the date the steps are about.
+   --  What a chain fetch found: the expirations, in order, and how many.
+   type Fetch_Reading is record
+      List  : Fasti.Day_List := [others => 0];
+      Count : Fasti.Expiration_Count := 0;
+   end record;
+
+   --  What one scenario reads back: the date the steps are about, and
+   --  what a chain fetch found.
    type World is record
-      Day : Fasti.Day := 0;
+      Day   : Fasti.Day := 0;
+      Fetch : Fetch_Reading;
    end record;
 
    --  One step as a machine sees it: the scenario, the step's arguments,
@@ -42,6 +54,20 @@ package Fasti_Steps is
 
    procedure Then_Take (Ctx : in out Step_Context; Evt : Step_Kind);
 
+   --  Capture N of the step, as written.
+   function Word (Ctx : Step_Context; N : Positive := 1) return String;
+
+   --  Whether capture N reads as a whole number of zero or more: the
+   --  guard every counting step's rows share.
+   function Count_Read (Ctx : Step_Context; N : Positive := 1) return Boolean;
+
+   --  Capture N, which Count_Read said reads.
+   function Count (Ctx : Step_Context; N : Positive := 1) return Natural
+   with Pre => Count_Read (Ctx, N);
+
+   --  Fail the step for capture N: why it does not read as a count.
+   procedure Refuse_Count (Ctx : in out Step_Context; N : Positive := 1);
+
    package Steps is new
      Fabula.Registry
        (Step_Kind => Step_Kind,
@@ -56,7 +82,13 @@ package Fasti_Steps is
       Step ("the market is closed")       >= E_Check_Closed,
       Step ("it is a market holiday")     >= E_Check_Holiday,
       Step ("it is not a market holiday") >= E_Check_No_Holiday,
-      Step ("it is a {word}")             >= E_Check_Weekday];
+      Step ("it is a {word}")             >= E_Check_Weekday,
+      Step ("a chain fetch on {word} wants {int} expiration(s)")
+                                          >= E_Fetch,
+      Step ("it finds {int}")             >= E_Check_Count,
+      Step ("the expirations are:")       >= E_Check_List,
+      Step ("the prior trading day of {word} is {word}")
+                                          >= E_Check_Prior];
    --!format on
 
    Hook_Defs : constant Steps.Hook_Table := [Before >= Fresh_World];

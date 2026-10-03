@@ -40,6 +40,32 @@ package body Fasti_Steps.Dates is
    function Packed (Word : String) return Fasti.Day
    is (Value (Word));
 
+   function Date (Ctx : Step_Context; N : Positive := 1) return Fasti.Day
+   is (Packed (Word (Ctx, N)));
+
+   procedure Refuse_Date (Ctx : in out Step_Context; N : Positive := 1) is
+   begin
+      Fabula.Check.Fail_Step (Ctx.R, "not a calendar date: " & Word (Ctx, N));
+   end Refuse_Date;
+
+   --  N in Width digits, leading zeros kept.
+   function Padded (N : Natural; Width : Positive) return String
+   is (if Width = 1
+       then [Character'Val (Character'Pos ('0') + N mod 10)]
+       else Padded (N / 10, Width - 1) & Padded (N mod 10, 1));
+
+   Year_Digits : constant := 4;
+   Two_Digits  : constant := 2;
+   Year_Shift  : constant := 10_000;
+   Month_Shift : constant := 100;
+
+   function Spelled (D : Fasti.Day) return String
+   is (Padded (D / Year_Shift, Year_Digits)
+       & "-"
+       & Padded (D / Month_Shift mod Month_Shift, Two_Digits)
+       & "-"
+       & Padded (D mod Month_Shift, Two_Digits));
+
    function Name_Of (N : Fasti.Weekday_Number) return String
    is (case N is
          when 0 => "Sunday",
