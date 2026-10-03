@@ -1,6 +1,6 @@
 # Feature tests plan
 
-Status: in progress on branch `feature-tests`: F0 done; F1-F10 to do.
+Status: in progress on branch `feature-tests`: F0-F1 done; F2-F10 to do.
 
 The calendar's behavior, stated in Gherkin and run against the proven
 functions with nothing to fake.  `*.feature` files under
@@ -755,3 +755,15 @@ commit, so the unit layer stays complete.
   the unit tests' word, not the feature's; F3-F7 each say the lifted
   unit test keeps its assertions and the feature restates the outcome
   only.
+- **During F1 (2026-10-03):** the first machine was written in
+  `Fasti_Steps.Trading` from the start, not in `fasti_steps.adb` to be
+  moved in F3, and the smoke feature is the first two scenarios of
+  `trading-days.feature`, which F3 grows rather than deletes -- the
+  history stays linear, with nothing written to be moved or removed.
+  `Fasti_Steps.Dates` is born here with `Reads` and `Packed`, which the
+  first guard needs; F2 adds the day names, the clock words and their
+  unit tests.  The table gained `Dated + Day_Given / A_Refuse_Day`, so
+  a bad second date is refused by name like the first.  Confirmed in a
+  scratch directory: a check before any date fails `E_CHECK_TRADES is
+  not a step this scenario can take now: trading days=UNDATED`;
+  `2026-13-40` and `20260702` fail `not a calendar date: <word>`.
