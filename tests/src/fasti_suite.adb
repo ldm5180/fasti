@@ -1,5 +1,6 @@
 with AUnit.Test_Cases;
 
+with Fasti_Steps_Dates_Tests;
 with Fasti_Tests;
 
 package body Fasti_Suite is
@@ -14,6 +15,7 @@ package body Fasti_Suite is
       end Add;
    begin
       Add (new Fasti_Tests.Test);
+      Add (new Fasti_Steps_Dates_Tests.Test);
       return Result;
    end Suite;
 
