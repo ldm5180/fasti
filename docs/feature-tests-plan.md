@@ -1,6 +1,10 @@
 # Feature tests plan
 
-Status: in progress on branch `feature-tests`: F0-F9 done; F10 to do.
+Status: implemented 2026-10-03 on branch `feature-tests` -- five
+features, 43 scenarios, every one passing in both modes; the AUnit
+suite went from 8 routines to 11 and lost none.  The "During F1"
+through "During F10" revision notes record where the code departed
+from the text below.
 
 The calendar's behavior, stated in Gherkin and run against the proven
 functions with nothing to fake.  `*.feature` files under
@@ -833,3 +837,13 @@ commit, so the unit layer stays complete.
   still writes `index.html` and the target exits 2.  The CI steps are
   nuntius's, after `make run`; the `alr test` step's comment now says
   it runs the features too.
+- **During F10 (2026-10-03):** `CLAUDE.md` names both targets, the
+  features' layout, the fabula pin beside tempus's, the testing layers
+  and the behavior rule; the README links the published page.  Every
+  CI step was run locally before the push: the validation build,
+  `alr test` (11 routines and 43 scenarios, both modes), `make run`,
+  `make features-report`, a fresh `make prove` (exit 0), and the
+  format step's own `gnatformat --no-project --check`.
+  `Fasti_Steps.Then_Take` has no caller -- no machine here needs a
+  follow-up event -- and is kept with the runner it belongs to, so
+  the copy stays whole for the move into fabula.
