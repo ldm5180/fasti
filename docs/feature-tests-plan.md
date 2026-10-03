@@ -1,6 +1,6 @@
 # Feature tests plan
 
-Status: in progress on branch `feature-tests`: F0-F7 done; F8-F10 to do.
+Status: in progress on branch `feature-tests`: F0-F8 done; F9-F10 to do.
 
 The calendar's behavior, stated in Gherkin and run against the proven
 functions with nothing to fake.  `*.feature` files under
@@ -822,3 +822,8 @@ commit, so the unit layer stays complete.
   section 7 allowed, in its own commit; it characterizes behavior that
   already holds, and no RED was possible without editing the pinned
   tempus that owns the day count, which this plan does not touch.
+- **During F8 (2026-10-03):** the recipe is nuntius's, byte for byte
+  bar the crate's name (diffed).  On a terminal the run carries 242
+  green codes where it carried none; piped, none, with the summary
+  still checked; a broken expectation prints red and fails the target
+  (`features: debug: the runner failed`, exit 2).
