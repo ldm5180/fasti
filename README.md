@@ -54,10 +54,16 @@ if Fasti.Is_Trading_Day (20_260_706) then ...
 ```sh
 make build    # build the library
 make test     # AUnit suite, both -O modes (fully offline)
+make features # the Gherkin features in tests/features/, both -O modes
+make features-report # the living documentation, as CI publishes it
 make prove    # SPARK proof, --checks-as-errors=on
 make format   # gnatformat --check
 make run      # build and run the example
 make help     # all targets
 ```
+
+What the calendar does is stated as Gherkin features in
+[tests/features](tests/features), and published as living documentation
+at <https://ldm5180.github.io/fasti/> from every push to main.
 
 Conventions (SPARK, strict TDD, commit style) live in [CLAUDE.md](CLAUDE.md).
