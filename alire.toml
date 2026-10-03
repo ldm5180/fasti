@@ -22,7 +22,7 @@ aunit = "^26.0.0"
 #  tempus itself pins sml the same way; that link rides along, so this
 #  crate never pins sml directly.
 [[pins]]
-tempus = { url = "https://github.com/ldm5180/tempus.git", commit = "25f7e396870b627d68afc10cd317ddbb5385621c" }
+tempus = { url = "https://github.com/ldm5180/tempus.git", commit = "51712384be2cc5694d436e11f31024bdf41849ae" }
 
 [build-switches]
 "*".ada_version = "Ada2022"
