@@ -21,11 +21,6 @@ package body Fasti_Steps.Trading is
       A_Check_Holiday,
       A_Check_No_Holiday);
 
-   First_Capture : constant := 1;
-
-   function Word (Ctx : Step_Context) return String
-   is (Fabula.Args.Word (Ctx.A, First_Capture));
-
    function Evaluate
      (G : Guard_Kind; Ctx : Step_Context; Evt : Step_Kind) return Boolean
    is
@@ -34,7 +29,7 @@ package body Fasti_Steps.Trading is
       return
         (case G is
            when Always         => True,
-           when Date_Reads     => Dates.Reads (Word (Ctx)),
+           when Date_Reads     => Dates.Date_Read (Ctx),
            when Day_Name_Reads => Dates.Is_Day_Name (Word (Ctx)));
    end Evaluate;
 
@@ -54,11 +49,10 @@ package body Fasti_Steps.Trading is
             null;
 
          when A_Keep_Day         =>
-            Ctx.W.Day := Dates.Packed (Word (Ctx));
+            Ctx.W.Day := Dates.Date (Ctx);
 
          when A_Refuse_Day       =>
-            Fabula.Check.Fail_Step
-              (Ctx.R, "not a calendar date: " & Word (Ctx));
+            Dates.Refuse_Date (Ctx);
 
          when A_Check_Weekday    =>
             Expect_Day (Ctx);

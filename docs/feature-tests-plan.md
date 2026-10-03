@@ -1,6 +1,6 @@
 # Feature tests plan
 
-Status: in progress on branch `feature-tests`: F0-F3 done; F4-F10 to do.
+Status: in progress on branch `feature-tests`: F0-F4 done; F5-F10 to do.
 
 The calendar's behavior, stated in Gherkin and run against the proven
 functions with nothing to fake.  `*.feature` files under
@@ -786,3 +786,13 @@ commit, so the unit layer stays complete.
   scenarios.  The dates were checked against the fixture CSV and
   Python's calendar; `date -d` on this box reads a dashed date a day
   early, so it was not used.
+- **During F4 (2026-10-03):** the fetch step reads `wants {int}
+  expiration(s)`, so the one-expiration scenario says `expiration`.
+  A fetch's refusals are guarded rows, in order: the date, then the
+  count, then the span past `Max_Span`; the list's names the first
+  row that is no date.  A failed list check prints the expirations
+  found, and a failed prior check the prior day found -- which needed
+  `Dates.Spelled`, the inverse of `Packed`, unit-tested with the
+  parsers.  The capture readers every machine shares moved out of the
+  machines: `Word` and the count readers into the registry,
+  `Date_Read` / `Date` / `Refuse_Date` into `Fasti_Steps.Dates`.

@@ -14,6 +14,20 @@ package Fasti_Steps.Dates is
    function Packed (Word : String) return Fasti.Day
    with Pre => Reads (Word);
 
+   --  Whether capture N of the step is a date Reads takes.
+   function Date_Read (Ctx : Step_Context; N : Positive := 1) return Boolean
+   is (Reads (Word (Ctx, N)));
+
+   --  Capture N, which Date_Read said is a date, as Fasti takes it.
+   function Date (Ctx : Step_Context; N : Positive := 1) return Fasti.Day
+   with Pre => Date_Read (Ctx, N);
+
+   --  Fail the step: capture N is no date.
+   procedure Refuse_Date (Ctx : in out Step_Context; N : Positive := 1);
+
+   --  D as a feature writes it, YYYY-MM-DD: what a failure names.
+   function Spelled (D : Fasti.Day) return String;
+
    --  The English name of a weekday as Fasti numbers it.
    function Name_Of (N : Fasti.Weekday_Number) return String;
 

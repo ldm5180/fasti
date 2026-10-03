@@ -1,5 +1,9 @@
 with Ada.Strings.Unbounded;
 
+with Fabula.Check.Ints;
+with Fabula.Numbers;
+
+with Fasti_Steps.Expirations;
 with Fasti_Steps.Trading;
 
 package body Fasti_Steps is
@@ -11,6 +15,28 @@ package body Fasti_Steps is
       Ctx.Has_Next := True;
       Ctx.Next := Evt;
    end Then_Take;
+
+   function Word (Ctx : Step_Context; N : Positive := 1) return String
+   is (Fabula.Args.Word (Ctx.A, N));
+
+   function Count_Read (Ctx : Step_Context; N : Positive := 1) return Boolean
+   is (N <= Fabula.Args.Count (Ctx.A)
+       and then Fabula.Args.Int (Ctx.A, N).Ok
+       and then Fabula.Args.Int (Ctx.A, N).Value >= 0);
+
+   function Count (Ctx : Step_Context; N : Positive := 1) return Natural
+   is (Fabula.Args.Int (Ctx.A, N).Value);
+
+   procedure Refuse_Count (Ctx : in out Step_Context; N : Positive := 1) is
+      Read : constant Fabula.Numbers.Integer_Reads.Read :=
+        Fabula.Args.Int (Ctx.A, N);
+   begin
+      if Read.Ok then
+         Fabula.Check.Fail_Step (Ctx.R, "a count cannot be negative");
+      else
+         Fabula.Check.Ints.Fail_Read (Ctx.R, Read.Error);
+      end if;
+   end Refuse_Count;
 
    ---------------------------------------------------------------------
    --  The features as orthogonal regions: every step is offered to each,
@@ -31,11 +57,13 @@ package body Fasti_Steps is
       Phase : Phase_Access;
    end record;
 
-   Trading_Name : aliased constant String := "trading days";
+   Trading_Name     : aliased constant String := "trading days";
+   Expirations_Name : aliased constant String := "expirations";
 
    --!format off
    Regions : constant array (Positive range <>) of Region :=
-     [(Trading_Name'Access, Trading.Offer'Access, Trading.Reset'Access, Trading.Phase'Access)];
+     [(Trading_Name'Access,     Trading.Offer'Access,     Trading.Reset'Access,     Trading.Phase'Access),
+      (Expirations_Name'Access, Expirations.Offer'Access, Expirations.Reset'Access, Expirations.Phase'Access)];
    --!format on
 
    --  Every region's state, for the step no region would take.
