@@ -1,6 +1,6 @@
 # Feature tests plan
 
-Status: planned 2026-10-03; F0-F10 not started.
+Status: in progress on branch `feature-tests`: F0 done; F1-F10 to do.
 
 The calendar's behavior, stated in Gherkin and run against the proven
 functions with nothing to fake.  `*.feature` files under
