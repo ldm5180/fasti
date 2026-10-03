@@ -8,10 +8,16 @@ package body Fasti_Steps.Trading is
    --  Undated until a step names the date; the checks read it then.
    type State is (Undated, Dated);
 
-   type Guard_Kind is (Always, Date_Reads);
+   type Guard_Kind is (Always, Date_Reads, Day_Name_Reads);
 
    type Action_Kind is
-     (A_Nothing, A_Keep_Day, A_Refuse_Day, A_Check_Trades, A_Check_Closed);
+     (A_Nothing,
+      A_Keep_Day,
+      A_Refuse_Day,
+      A_Check_Weekday,
+      A_Refuse_Day_Name,
+      A_Check_Trades,
+      A_Check_Closed);
 
    First_Capture : constant := 1;
 
@@ -25,9 +31,16 @@ package body Fasti_Steps.Trading is
    begin
       return
         (case G is
-           when Always     => True,
-           when Date_Reads => Dates.Reads (Word (Ctx)));
+           when Always         => True,
+           when Date_Reads     => Dates.Reads (Word (Ctx)),
+           when Day_Name_Reads => Dates.Is_Day_Name (Word (Ctx)));
    end Evaluate;
+
+   procedure Expect_Day (Ctx : in out Step_Context) is
+      Day : constant String := Dates.Name_Of (Fasti.Weekday_Of (Ctx.W.Day));
+   begin
+      Fabula.Check.Is_True (Ctx.R, Day = Word (Ctx), "it is a " & Day);
+   end Expect_Day;
 
    procedure Execute
      (A : Action_Kind; Ctx : in out Step_Context; Evt : Step_Kind)
@@ -35,23 +48,30 @@ package body Fasti_Steps.Trading is
       pragma Unreferenced (Evt);
    begin
       case A is
-         when A_Nothing      =>
+         when A_Nothing         =>
             null;
 
-         when A_Keep_Day     =>
+         when A_Keep_Day        =>
             Ctx.W.Day := Dates.Packed (Word (Ctx));
 
-         when A_Refuse_Day   =>
+         when A_Refuse_Day      =>
             Fabula.Check.Fail_Step
               (Ctx.R, "not a calendar date: " & Word (Ctx));
 
-         when A_Check_Trades =>
+         when A_Check_Weekday   =>
+            Expect_Day (Ctx);
+
+         when A_Refuse_Day_Name =>
+            Fabula.Check.Fail_Step
+              (Ctx.R, "not a day of the week: " & Word (Ctx));
+
+         when A_Check_Trades    =>
             Fabula.Check.Is_True
               (Ctx.R,
                Fasti.Is_Trading_Day (Ctx.W.Day),
                "the market is closed");
 
-         when A_Check_Closed =>
+         when A_Check_Closed    =>
             Fabula.Check.Is_False
               (Ctx.R, Fasti.Is_Trading_Day (Ctx.W.Day), "the market trades");
       end case;
@@ -70,18 +90,21 @@ package body Fasti_Steps.Trading is
    use Flow.Machines;
    use Flow.Op;
 
-   Day_Given    : constant Ev := (Kind => E_Day_Given);
-   Check_Trades : constant Ev := (Kind => E_Check_Trades);
-   Check_Closed : constant Ev := (Kind => E_Check_Closed);
+   Day_Given     : constant Ev := (Kind => E_Day_Given);
+   Check_Weekday : constant Ev := (Kind => E_Check_Weekday);
+   Check_Trades  : constant Ev := (Kind => E_Check_Trades);
+   Check_Closed  : constant Ev := (Kind => E_Check_Closed);
 
    --!format off
    Table : constant Transition_Table :=
-     [Undated + Day_Given (Date_Reads) / A_Keep_Day     >= Dated,
-      Undated + Day_Given              / A_Refuse_Day   >= Undated,
-      Dated   + Day_Given (Date_Reads) / A_Keep_Day     >= Dated,
-      Dated   + Day_Given              / A_Refuse_Day   >= Undated,
-      Dated   + Check_Trades           / A_Check_Trades >= Dated,
-      Dated   + Check_Closed           / A_Check_Closed >= Dated];
+     [Undated + Day_Given     (Date_Reads)     / A_Keep_Day        >= Dated,
+      Undated + Day_Given                      / A_Refuse_Day      >= Undated,
+      Dated   + Day_Given     (Date_Reads)     / A_Keep_Day        >= Dated,
+      Dated   + Day_Given                      / A_Refuse_Day      >= Undated,
+      Dated   + Check_Weekday (Day_Name_Reads) / A_Check_Weekday   >= Dated,
+      Dated   + Check_Weekday                  / A_Refuse_Day_Name >= Dated,
+      Dated   + Check_Trades                   / A_Check_Trades    >= Dated,
+      Dated   + Check_Closed                   / A_Check_Closed    >= Dated];
    --!format on
 
    Current : State := Undated;
