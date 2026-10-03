@@ -26,7 +26,9 @@ package Fasti_Steps is
       E_Check_Prior,
       E_Instant_Given,
       E_Check_Eastern,
-      E_Check_No_Eastern);
+      E_Check_No_Eastern,
+      E_Mask_Given,
+      E_Check_Entry);
 
    type Hook_Kind is (Fresh_World);
 
@@ -44,10 +46,12 @@ package Fasti_Steps is
       Ok  : Boolean := False;
    end record;
 
-   --  What one scenario reads back: the date the steps are about, what
-   --  a chain fetch found, and an instant on the Eastern clock.
+   --  What one scenario reads back: the date the steps are about, the
+   --  entry mask, what a chain fetch found, and an instant on the
+   --  Eastern clock.
    type World is record
       Day     : Fasti.Day := 0;
+      Mask    : Natural := 0;
       Fetch   : Fetch_Reading;
       Eastern : Eastern_Reading;
    end record;
@@ -105,7 +109,9 @@ package Fasti_Steps is
                                           >= E_Instant_Given,
       Step ("in Eastern time it is {word} at {word}")
                                           >= E_Check_Eastern,
-      Step ("it has no Eastern day")      >= E_Check_No_Eastern];
+      Step ("it has no Eastern day")      >= E_Check_No_Eastern,
+      Step ("the entry mask is {int}")    >= E_Mask_Given,
+      Step ("entry is {word}")            >= E_Check_Entry];
    --!format on
 
    Hook_Defs : constant Steps.Hook_Table := [Before >= Fresh_World];
