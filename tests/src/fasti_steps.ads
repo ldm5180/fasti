@@ -28,7 +28,8 @@ package Fasti_Steps is
       E_Check_Eastern,
       E_Check_No_Eastern,
       E_Mask_Given,
-      E_Check_Entry);
+      E_Check_Entry,
+      E_Check_Between);
 
    type Hook_Kind is (Fresh_World);
 
@@ -111,7 +112,9 @@ package Fasti_Steps is
                                           >= E_Check_Eastern,
       Step ("it has no Eastern day")      >= E_Check_No_Eastern,
       Step ("the entry mask is {int}")    >= E_Mask_Given,
-      Step ("entry is {word}")            >= E_Check_Entry];
+      Step ("entry is {word}")            >= E_Check_Entry,
+      Step ("there are {int} days from {word} to {word}")
+                                          >= E_Check_Between];
    --!format on
 
    Hook_Defs : constant Steps.Hook_Table := [Before >= Fresh_World];

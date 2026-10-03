@@ -1,6 +1,6 @@
 # Feature tests plan
 
-Status: in progress on branch `feature-tests`: F0-F6 done; F7-F10 to do.
+Status: in progress on branch `feature-tests`: F0-F7 done; F8-F10 to do.
 
 The calendar's behavior, stated in Gherkin and run against the proven
 functions with nothing to fake.  `*.feature` files under
@@ -814,3 +814,11 @@ commit, so the unit layer stays complete.
   (Sunday is 0): the digits are the operator's own knob, so the
   numbering is the knob's, not an internal.  A library mutation (the
   mask read to its last digit only) fails the 2345-on-a-Thursday row.
+- **During F7 (2026-10-03):** the feature has a one-state machine
+  whose refusals are guarded in order: the count, then the first date,
+  then the second.  A failed check names the count found (`there are 1
+  days`).  A library mutation (the difference unsigned) fails the
+  negative row.  `Test_Days_Between` gained the leap-year row, as
+  section 7 allowed, in its own commit; it characterizes behavior that
+  already holds, and no RED was possible without editing the pinned
+  tempus that owns the day count, which this plan does not touch.
